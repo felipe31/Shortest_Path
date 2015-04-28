@@ -30,3 +30,5 @@
 
 # Debug files
 *.dSYM/
+
+.fuse_hidden000001f600000002

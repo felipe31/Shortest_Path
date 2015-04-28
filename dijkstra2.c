@@ -15,7 +15,7 @@
  * n = qtd de vértices
  * o = origem
  */
-int * Dijkstra (int * v1, int n, int o )
+int * DijkstraVetor (int * v1, int n, int o )
 {
 
     assert(v1);
@@ -33,6 +33,7 @@ int * Dijkstra (int * v1, int n, int o )
     //    printf("%d %d = %d\n" ,j , k, *((v1 + (i % n) * n) + (i / n)));
         v[j][k] = *((v1 + (i % n) * n) + (i / n));
         k++;
+
         if(k == n)
         {
             k = 0;
@@ -49,6 +50,8 @@ int * Dijkstra (int * v1, int n, int o )
     // Lista de vértices visitados(desconhecido) e explorados
     int visitado[n];
     int explorado[n];
+
+
     int verifEx;
 
 
@@ -122,8 +125,10 @@ int * Dijkstra (int * v1, int n, int o )
         if( verifEx == 0)
             break;
 
+
         ex = menor;
 
+        verifEx = 0;
     }
 
     return caminhoMin;
@@ -139,6 +144,17 @@ int main(void)
     int j;
 
     memset(v, 0, sizeof(v));
+    
+
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < n; j++)
+        {
+            printf("%d ", v[i][j]);
+        }
+        printf("\n");
+    }
+printf("\n");printf("\n");
 
     v[A][B] = 4;
     v[A][C] = 2;
@@ -179,7 +195,7 @@ int main(void)
 
 
 
-    cm = Dijkstra((int *) v, n, o);
+    cm = DijkstraVetor((int *) v, n, o);
 
 
     for(j = 0 ; j < n; j++)
