@@ -10,23 +10,27 @@
 #define E 4
 #define F 5
 
+
 /*
  * v = grafo em forma de matriz
  * n = qtd de vértices
  * o = origem
  */
-int * DijkstraVetor (int * v1, int n, int o )
+int * Dijkstra (int * v1, int o, int n)
 {
+
 
     assert(v1);
     if(n < 1)
         return NULL;
+
 
     int v[n][n];
 
     int j = 0;
     int k = 0;
     int i;
+    int idx;
 
     for (i = 0; i < n * n; i++)
     {
@@ -52,7 +56,7 @@ int * DijkstraVetor (int * v1, int n, int o )
     int explorado[n];
 
 
-    int verifEx;
+    int verifEx = 0;
 
 
      i = 0;
@@ -91,7 +95,7 @@ int * DijkstraVetor (int * v1, int n, int o )
 //            puts("teste");
 //            printf("ex %d   i %d    n %d\n", ex, i, n);
 //            printf(" %d, %d, %d\n", v[ex][i], i, visitado[i]);
-            if (v[ex][i])
+            if (v[ex][i] != -1)
             {
 
 //                printf(" %d, %d, %d\n", v[ex][i], visitado[ex], visitado[i]);
@@ -116,7 +120,10 @@ int * DijkstraVetor (int * v1, int n, int o )
             {
                 verifEx++;
                 if( visitado[i] < menor)
-                    menor = i;
+                {
+                    menor = visitado[i];
+                    idx = i;
+                }
             }
         }
 
@@ -126,26 +133,112 @@ int * DijkstraVetor (int * v1, int n, int o )
             break;
 
 
-        ex = menor;
+        ex = idx;
 
         verifEx = 0;
     }
 
+
+    printf("Os calculos de menor caminho para a origem %d foram feitos\n", o);
+
+/*
+    for(i = 0; i < n; i++)
+    {
+        printf("%d = %d\n", i, caminhoMin[i] );
+    }    
+*/
+
     return caminhoMin;
 }
+
+
+/* Algoritmo que imprime recursivamente o
+ * caminho pro destino
+ * ele para de imprimir quando encontrar índice igual ao valor
+ */
+void imprimeCm(int * Cm, int destino)
+{
+
+    assert(Cm);
+    if(Cm[destino] == destino)
+    {
+        printf("%d", destino);
+        return;
+    }
+
+    imprimeCm(Cm, Cm[destino]);
+
+    printf(" -> %d", destino );
+
+    return;
+
+}
+
+
+
+/*
+ * shortestPath imprime mínimo para dada origem 
+ * e dado destino, sendo que:
+ *
+ * n = numero total de elementos
+ * listCm = lista de caminhos mínimos
+ *
+ *
+ * Recebe as informações necessárias e guarda
+ * os cálculos pra eles não precisarem ser 
+ * refeitos.
+ *
+ * Se já existirem, apenas consulta.
+ *
+ */
+void shortestPath(int * v1, int origem, int destino, int n, int ** listCm)
+{
+
+
+    assert(v1);
+    assert(listCm);
+
+
+    if(n < 1) return;
+
+    if(!listCm[origem])
+        listCm[origem] = Dijkstra(v1, origem, n);
+
+    imprimeCm(listCm[origem], destino);
+    puts("");
+
+    return;
+}
+
+
 int main(void)
 {
+
+/* n = numero total de elementos
+ * o = origem 
+ * v = matriz representando o grafo
+ * listCm = veotor de caminhos mínimos 
+ */
+
     int n = 6;
     int o = 0;
     int v[n][n];
-    int * cm;
+    int ** listCm = (int **)malloc(sizeof(int *)*n);
+    if(!listCm) return 0;
 
-    int i = 0;
+
+    int i;
     int j;
 
-    memset(v, 0, sizeof(v));
-    
 
+    for(i = 0; i < n; i++)
+    {
+        listCm[i] = NULL;
+    }
+
+    memset(v, -1, sizeof(v));
+    
+    puts("Matriz sem os valores do grafo");
     for(i = 0; i < n; i++)
     {
         for(j = 0; j < n; j++)
@@ -154,7 +247,8 @@ int main(void)
         }
         printf("\n");
     }
-printf("\n");printf("\n");
+    printf("\n\n");
+
 
     v[A][B] = 4;
     v[A][C] = 2;
@@ -180,9 +274,7 @@ printf("\n");printf("\n");
     v[F][D] = 6;
     v[F][E] = 2;
 
-
-
-
+    puts("Matriz com os valores do grafo");
 
     for(i = 0; i < n; i++)
     {
@@ -192,15 +284,25 @@ printf("\n");printf("\n");
         }
         printf("\n");
     }
+    puts("\nA primeira vez que cada vértice é a origem (Dijkstra é usado)\n");
 
+    shortestPath((int *) v, A, F, n, listCm);
+    shortestPath((int *) v, B, A, n, listCm);
+    shortestPath((int *) v, C, E, n, listCm);
+    shortestPath((int *) v, D, A, n, listCm);
+    shortestPath((int *) v, E, A, n, listCm);
+    shortestPath((int *) v, F, A, n, listCm);
 
+    puts("\nA segunda vez que cada vértice é a origem (valores já foram calculados)\n");
 
-    cm = DijkstraVetor((int *) v, n, o);
+    //Repetição das origens com outras saídas
 
-
-    for(j = 0 ; j < n; j++)
-    {
-        printf("%d = %d\n", j, *(cm+j));
-    }
+    shortestPath((int *) v, A, F, n, listCm);
+    shortestPath((int *) v, B, E, n, listCm);
+    shortestPath((int *) v, C, D, n, listCm);
+    shortestPath((int *) v, D, C, n, listCm);
+    shortestPath((int *) v, E, B, n, listCm);
+    shortestPath((int *) v, F, A, n, listCm);
+    
     return 0;
 }
