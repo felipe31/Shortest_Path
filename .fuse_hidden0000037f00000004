@@ -84,7 +84,7 @@ int * Dijkstra (int * v1, int o, int n)
     visitado[o] = 0;
 
 
-    //Começamos explorando o nó origem, então colocamos
+    //Começamos explorando o nó origem, então colocamos 
     //o mesmo no vetor explorado na posição origem
     explorado[o] = o;
 
@@ -126,12 +126,12 @@ int * Dijkstra (int * v1, int o, int n)
 
 //                printf(" %d, %d, %d\n", v[ex][i], visitado[ex], visitado[i]);
 
-
-                /*
+  
+                /* 
                  * if para verificar se o caminho encontrado para o vértice i
                  * é o menor já encontrado
                  * Se for então o caminhoMin é atualizado
-                 * e visitado guarda o novo valor mínimo para o vértice
+                 * e visitado guarda o novo valor mínimo para o vértice 
                  */
                 if((v[ex][i] + visitado[ex]) < visitado[i])
                 {
@@ -143,7 +143,7 @@ int * Dijkstra (int * v1, int o, int n)
 
         }
 
-        /*
+        /* 
          * Após visitar todos os vértices com os quais ex tem ligação,
          * então colocamos ele no grupo dos vértices explorados
          */
@@ -193,15 +193,15 @@ int * Dijkstra (int * v1, int o, int n)
 
 
 
-    /*
-     * for para imprimir a lista de camínhos mínimos para a dada origem
+    /* 
+     * for para imprimir a lista de camínhos mínimos para a dada origem 
      */
     puts("A sua lista de caminhos mínimos é a seguinte:");
 
     for(i = 0; i < n; i++)
     {
         printf("%d = %d\n", i, caminhoMin[i] );
-    }
+    }    
     puts("");
 
 
@@ -240,7 +240,7 @@ void imprimeCm(int * Cm, int destino)
 
 
 /*
- * shortestPath imprime caminho mínimo para dada origem
+ * shortestPath imprime caminho mínimo para dada origem 
  * e dado destino, sendo que:
  *
  * n = numero total de elementos
@@ -248,7 +248,7 @@ void imprimeCm(int * Cm, int destino)
  *
  *
  * Recebe as informações necessárias e guarda
- * os cálculos pra eles não precisarem ser
+ * os cálculos pra eles não precisarem ser 
  * refeitos.
  *
  * Se já existirem, apenas consulta.
@@ -258,7 +258,7 @@ void shortestPath(int * v1, int origem, int destino, int n, int ** listCm)
 {
     assert(v1);
     assert(listCm);
-
+ 
     if(n < 1) return;
 
     // if confere se já existem os cálculos para essa origem
@@ -277,17 +277,9 @@ int main(void)
 {
 
 /* n = numero total de elementos
- * o = origem
+ * o = origem 
  * v = matriz representando o grafo
- * listCm = vetor de vetores de caminhos mínimos
- */
-
- /*
-int **v
-v = (int**)calloc(n, sizeof(int*));
-for (size_t i = 0;  < count; ++) {
-    v[i] = (int*)calloc(n, sizeof(int));
-}
+ * listCm = vetor de vetores de caminhos mínimos 
  */
 
     int n = 6;
@@ -307,7 +299,7 @@ for (size_t i = 0;  < count; ++) {
     }
 
     memset(v, -1, sizeof(v));
-
+    
     puts("Matriz sem os valores do grafo");
     for(i = 0; i < n; i++)
     {
@@ -357,7 +349,7 @@ for (size_t i = 0;  < count; ++) {
         printf("\n");
     }
     puts("\nA primeira vez que cada vértice é a origem (Dijkstra é usado)\n");
-// floyd warsha
+
     shortestPath((int *) v, A, F, n, listCm);
     shortestPath((int *) v, B, E, n, listCm);
     shortestPath((int *) v, C, D, n, listCm);
