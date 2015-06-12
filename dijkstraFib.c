@@ -1,5 +1,5 @@
 #include "dijkstra.h"
-#include "HeapFib/fib.h"
+#include "fib.h"
 
 #define A 0
 #define B 1
