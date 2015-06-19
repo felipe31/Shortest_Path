@@ -77,12 +77,13 @@ NoHeapFib * insereFib(HeapFib* H, int custo){
 	(H -> qtdNos)++;
 	return novoNo;
 }
-int dragonball = 0;
+//int dragonball = 0;
+
 NoHeapFib * insereFibNoPronto(HeapFib* H, NoHeapFib* No){
 	assert(H);
 	assert(No);
     
-    printf("%d ", dragonball++);
+//    printf("%d insere ", dragonball++);
 
 	if (H->noMin == NULL){
 		H->noMin = No;
@@ -285,24 +286,21 @@ void cut(HeapFib* H, NoHeapFib* x, NoHeapFib* y)
         if(x -> esq == x)
         {
             y -> filho = NULL;
-            y -> grau--;
         }
         else
         {
             y -> filho = x -> esq;
-            y -> grau--;
         }
     }
-    else
-    {
-        (x -> esq) -> dir = x -> dir;
-        (x -> dir) -> esq = x -> esq;
-        y -> grau--;
-    }
 
-    insereFibNoPronto(H, x);
+    (x -> esq) -> dir = x -> dir;
+    (x -> dir) -> esq = x -> esq;
+    y -> grau--;
+
     x -> pai = NULL;
     x -> marca = 0;
+
+    insereFibNoPronto(H, x);
 }
 
 void cascadingCut(HeapFib* H, NoHeapFib* y)
@@ -314,8 +312,8 @@ void cascadingCut(HeapFib* H, NoHeapFib* y)
 
     if(z != NULL)
     {
-        if(!y -> marca)
-            y -> marca = 1;
+        if(!y->marca)
+            y->marca = 1;
         else
         {
             cut(H, y, z);

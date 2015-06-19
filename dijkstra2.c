@@ -263,7 +263,7 @@ void shortestPath(int * v1, int origem, int destino, int n, int ** listCm)
 
     // if confere se já existem os cálculos para essa origem
     // e apenas chama Dijkstra caso não hajam tais dados
-    if(!listCm[origem])
+    //if(!listCm[origem])
         listCm[origem] = Dijkstra(v1, origem, n);
 
     imprimeCm(listCm[origem], destino);
@@ -282,12 +282,12 @@ int main(void)
  * listCm = vetor de vetores de caminhos mínimos
  */
 
- /*
-int **v
-v = (int**)calloc(n, sizeof(int*));
-for (size_t i = 0;  < count; ++) {
-    v[i] = (int*)calloc(n, sizeof(int));
-}
+   /*  
+    int **v
+    v = (int**)calloc(n, sizeof(int*));
+    for (size_t i = 0;  < count; ++) {
+        v[i] = (int*)calloc(n, sizeof(int));
+    }
  */
 
     int n = 6;
@@ -358,13 +358,16 @@ for (size_t i = 0;  < count; ++) {
     }
     puts("\nA primeira vez que cada vértice é a origem (Dijkstra é usado)\n");
 // floyd warsha
-    shortestPath((int *) v, A, F, n, listCm);
-    shortestPath((int *) v, B, E, n, listCm);
-    shortestPath((int *) v, C, D, n, listCm);
-    shortestPath((int *) v, D, C, n, listCm);
-    shortestPath((int *) v, E, B, n, listCm);
-    shortestPath((int *) v, F, A, n, listCm);
 
+    for(i = 4000; i; --i)
+    {
+        shortestPath((int *) v, A, F, n, listCm);
+        shortestPath((int *) v, B, E, n, listCm);
+        shortestPath((int *) v, C, D, n, listCm);
+        shortestPath((int *) v, D, C, n, listCm);
+        shortestPath((int *) v, E, B, n, listCm);
+        shortestPath((int *) v, F, A, n, listCm);
+    }
 
     puts("\nA segunda vez que cada vértice é a origem (valores já foram calculados)\n");
 

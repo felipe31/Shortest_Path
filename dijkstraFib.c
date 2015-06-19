@@ -14,6 +14,8 @@
  * n = qtd de vértices
  * o = origem
  */
+int dragonball =0;
+
 verticeDjk * dijkstra (int ** v, int o, int n)
 {
     assert(v);
@@ -66,7 +68,8 @@ verticeDjk * dijkstra (int ** v, int o, int n)
             if (v[ex][i] != -1)
             {
 
-                /*
+printf("%d insere ", dragonball++);
+  puts("");                /*
                  * if para verificar se o caminho encontrado para o vértice i
                  * é o menor já encontrado
                  * Se for então o caminhoMin é atualizado
@@ -101,7 +104,7 @@ verticeDjk * dijkstra (int ** v, int o, int n)
 
 
         // ex recebe o índice do vértice a ser explorado
-
+  
         no = extractMin(heap);
     }
 
@@ -201,7 +204,7 @@ int main(void)
 
  
     int **v;
-    int n = 500;
+    int n = 10  ;
 
     int i;
     int j;
@@ -250,7 +253,7 @@ int main(void)
         }
     }
 
-/*
+
 
     puts("Matriz com os valores do grafo");
 
@@ -262,7 +265,7 @@ int main(void)
         }
         printf("\n");
     }
-    */
+    
     puts("\nA primeira vez que cada vértice é a origem (Dijkstra é usado)\n");
 
 // floyd warshall
