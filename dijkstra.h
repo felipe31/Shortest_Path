@@ -7,14 +7,8 @@
 #include <limits.h>
 #include <assert.h>
 
+#include "fib.h"
 
-typedef struct verticeDjk
-{
-	int custo;
-	int verticeId;
-	struct verticeDjk * predec;
-
-} verticeDjk;
 
 
 

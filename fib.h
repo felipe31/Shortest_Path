@@ -13,10 +13,11 @@ typedef struct NoHeapFib{
 	struct NoHeapFib* filho; //ponteiro para um nó filho
 	struct NoHeapFib* esq; //ponteiro para o nó irmão esquerdo
 	struct NoHeapFib* dir; //ponteiro para o nó irmão direito
-	
-	verticeDjk * chave;
+
+
+	int custo;
 	int grau; //quantidade de filhos do nó
-	int marca; //campo booleano que determina se o nó já 
+	char marca; //campo booleano que determina se o nó já perdeu o filho
 
 } NoHeapFib;
 
@@ -28,12 +29,22 @@ typedef struct HeapFib
 } HeapFib;
 
 
+typedef struct verticeDjk
+{
+	
+	NoHeapFib * noFib;
+	int verticeId;
+	struct verticeDjk * predec;
+
+} verticeDjk;
+
+
 
 HeapFib * makeHeapFib();
 
-NoHeapFib * insereFib( HeapFib * H, verticeDjk * chave);
+NoHeapFib * insereFib( HeapFib * H, int custo);
 
-void insereFibNoPronto( HeapFib * H, NoHeapFib * No);
+NoHeapFib * insereFibNoPronto( HeapFib * H, NoHeapFib * No);
 
 void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x);
 

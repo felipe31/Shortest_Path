@@ -19,7 +19,7 @@ HeapFib * makeHeapFib()
 
 int G = 0;
 void imprimir( NoHeapFib* No, NoHeapFib * pai){
-	printf("Elemento %d: %d   ", G++,  No == NULL ? INT_MIN : No -> chave -> custo);
+	printf("Elemento %d: %d   ", G++,  No == NULL ? INT_MIN : No -> custo);
 
 /*	if( No->filho != NULL){
 		imprimir( No->filho, No->filho);
@@ -45,7 +45,7 @@ void imprimirHeapFib(HeapFib* H){
 
 /*---------------------------------------------- INSERIR ----------------------------------------------*/
 
-NoHeapFib * insereFib(HeapFib* H, verticeDjk * chave){
+NoHeapFib * insereFib(HeapFib* H, int custo){
 	assert(H);
 
 	NoHeapFib* novoNo = (NoHeapFib*) malloc( sizeof( NoHeapFib));
@@ -53,7 +53,7 @@ NoHeapFib * insereFib(HeapFib* H, verticeDjk * chave){
 
 	novoNo->pai = NULL;
 	novoNo->filho = NULL;
-	novoNo->chave = chave;
+	novoNo->custo = custo;
 	novoNo->grau = 0;
 	novoNo->marca = 0; 
 
@@ -69,7 +69,7 @@ NoHeapFib * insereFib(HeapFib* H, verticeDjk * chave){
 		novoNo->dir = (H -> noMin);
 		(novoNo->esq)->dir = novoNo;
 
-		if ( chave -> custo < (H -> noMin) -> chave -> custo){
+		if ( custo < (H -> noMin) -> custo){
 			(H -> noMin) = novoNo;
 		}
 	}
@@ -77,20 +77,34 @@ NoHeapFib * insereFib(HeapFib* H, verticeDjk * chave){
 	(H -> qtdNos)++;
 	return novoNo;
 }
+int dragonball = 0;
+NoHeapFib * insereFibNoPronto(HeapFib* H, NoHeapFib* No){
+	assert(H);
+	assert(No);
+    
+    printf("%d ", dragonball++);
 
-void insereFibNoPronto( HeapFib* H, NoHeapFib* No){
-	assert( H);
+	if (H->noMin == NULL){
+		H->noMin = No;
+		No->esq = No->dir = No;
+	}
 
-	if ( H->noMin == NULL)
-		return;
+	else{
+		No->esq = H->noMin->esq;
+		H->noMin->esq = No;
+		No->esq->dir = No;
+		No->dir = H->noMin;
+	}
 
-	No->esq = (H -> noMin)->esq;
-	(H -> noMin) -> esq = No;
-	No -> dir = (H -> noMin);
-	(No -> esq) -> dir = No;
+	No->pai = NULL;
+	No->filho = NULL;
+	No->marca = 0;
+	H->qtdNos++;
 
-	if (No -> chave -> custo < (H -> noMin) -> chave -> custo)
-			(H -> noMin) = No;	
+	if (No->custo < H->noMin->custo)
+		H->noMin = No;
+
+	return No;
 
 }
 
@@ -137,27 +151,20 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 }
 
 
-void consolidar(HeapFib * H)
-{	
-	NoHeapFib * a[H->qtdNos];
-	int i, grau;
-	NoHeapFib * y, * troca, * x = H -> noMin;
-
-
-	for(i = 0; i < H -> qtdNos; i++)
-	{
-		a[i] = NULL;
-	}
+void consolidar(HeapFib * H){
+	assert(H);
 	
+	NoHeapFib **a = (NoHeapFib **) calloc(H->qtdNos, sizeof(NoHeapFib *));
+	int i, grau;
+	NoHeapFib * y, * troca, * x = H->noMin;
 
 	do{
 
-		grau = x -> grau;
+		grau = x->grau;
 
-		while(a[grau])
-		{
+		while(a[grau]){
 			y = a[grau];
-			if (x -> chave -> custo > y -> chave -> custo)
+			if (x->custo > y->custo)
 			{
 				troca = x;
 				x = y;
@@ -171,39 +178,38 @@ void consolidar(HeapFib * H)
 		}
 	
 		a[grau] = x;
-		x = x -> dir;
+		x = x->dir;
 
 	}while(x != H -> noMin);
 
 
-	H -> noMin = NULL;
+	H->noMin = NULL;
 
 	for(i = 0; i < H -> qtdNos; i++)
 	{
 		if( a[i] )
 		{
-			if(!(H -> noMin))
+			if(!(H->noMin))
 			{
-				H -> noMin = a[i];
-				a[i] -> esq = a[i];
-				a[i] -> dir = a[i];
+				H->noMin = a[i];
+				a[i]->esq = a[i];
+				a[i]->dir = a[i];
 			}
 			else
 			{
-				a[i] -> esq  = (H -> noMin) -> esq;		
+				a[i]->esq  = H->noMin->esq;		
 				(H -> noMin) -> esq = a[i];
 				a[i] -> dir = (H -> noMin);
 
 				(a[i] -> esq) -> dir = a[i];
 
 
-				if(a[i] -> chave -> custo < (H -> noMin) -> chave -> custo)
+				if(a[i] -> custo < (H -> noMin) -> custo)
 					H -> noMin = a[i];
 
 			}
 		}
 	}
-
 }
 
 
@@ -211,60 +217,58 @@ NoHeapFib * extractMin(HeapFib * H)
 {
 	assert(H);
 
-	NoHeapFib * ext = H -> noMin;
+	NoHeapFib * noExtraido = H->noMin;
 	NoHeapFib * filho;
 	NoHeapFib * aux = NULL;
 
 
-	if(ext != NULL)
+	if(noExtraido != NULL)
 	{
 
-		filho = ext -> filho;
+		filho = noExtraido->filho;
 
 		if(filho)
 		{
-/*********************** Insere todos os filhos de ext na lista de raizes ***********************/
+/*********************** Insere todos os filhos de noExtraido na lista de raizes ***********************/
 
-			(filho -> esq) -> dir = (ext -> dir);
-			(ext -> dir) -> esq = filho -> esq;
+			filho->esq->dir = noExtraido->dir;
+			noExtraido->dir->esq = filho->esq;
 
-			filho -> esq = ext;
-			ext -> dir = filho;
+			filho->esq = noExtraido;
+			noExtraido->dir = filho;
 
 			aux = filho;
 			
 			do
 			{
-				aux -> pai	= NULL;
-				aux = aux -> esq;
+				aux->pai= NULL;
+				aux = aux->esq;
 
 			}while(aux != filho);
 
 		}
-/*********************** Remove ext da lista de raizes ***********************/
+/*********************** Remove noExtraido da lista de raizes ***********************/
 
-		(ext -> esq) -> dir = ext -> dir;
-		(ext -> dir) -> esq = ext -> esq;
-
-
-		if(ext == ext -> dir)
-		{
-
-			H -> noMin = NULL;
-		}
+		if(noExtraido == noExtraido -> dir)
+			H->noMin = NULL;
+		
 		else
 		{
-			H -> noMin = ext -> dir;
+			
+			noExtraido->esq->dir = noExtraido->dir;
+			noExtraido->dir->esq = noExtraido->esq;
+
+			H->noMin = noExtraido->dir;
 
 			consolidar(H);
 		}
 
-		H -> qtdNos--;
+		H->qtdNos--;
 
 
 	}
 
-	return ext;
+	return noExtraido;
 }
 
 
@@ -325,24 +329,28 @@ void decreaseKey(HeapFib* H, NoHeapFib* x , int k, verticeDjk * predec)
 {
     assert(H);
     assert(x);
+    assert(predec);
 
-    if(k > x -> chave ->  custo) 
+    if(k > x ->  custo) 
     {
         printf("Nova chave é maior que chave atual");
         return;
     }
 
-    x -> chave -> custo = k;
-    x -> chave -> predec = predec;
+    x -> custo = k;
+
+    verticeDjk * x2 = (verticeDjk *) x;
+
+    x2 -> predec = predec;
 
     NoHeapFib* y = x->pai;
 
-    if(y != NULL && x -> chave -> custo < y -> chave -> custo)
+    if(y != NULL && x -> custo < y -> custo)
     {
         cut(H, x, y);
         cascadingCut(H, y);
     }
 
-    if(x -> chave -> custo < (H->noMin) -> chave -> custo)
+    if(x -> custo < (H->noMin) -> custo)
         H->noMin = x;
 }
