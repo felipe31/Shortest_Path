@@ -14,7 +14,7 @@
  * n = qtd de vértices
  * o = origem
  */
-int dragonball =0;
+
 
 verticeDjk * dijkstra (int ** v, int o, int n)
 {
@@ -68,8 +68,7 @@ verticeDjk * dijkstra (int ** v, int o, int n)
             if (v[ex][i] != -1)
             {
 
-printf("%d insere ", dragonball++);
-  puts("");                /*
+                /*
                  * if para verificar se o caminho encontrado para o vértice i
                  * é o menor já encontrado
                  * Se for então o caminhoMin é atualizado
@@ -85,7 +84,6 @@ printf("%d insere ", dragonball++);
 
                 else
                 {
-                    
 
                         caminhoMin[i].predec = &caminhoMin[ex];
                         caminhoMin[i].verticeId = i;
@@ -204,7 +202,7 @@ int main(void)
 
  
     int **v;
-    int n = 10  ;
+    int n = 10 ;
 
     int i;
     int j;
@@ -243,16 +241,21 @@ int main(void)
 
     // Inserção dos valores das arestas
     // do grafo na matriz
-    
+
+    int i2 = 0;
 
     for (i = 0; i < n; ++i)
     {
-        for (j = 0; j < n; ++j)
+        for (j = 0 + i2++ ; j < n; ++j)
         {
-            v[i][j] = rand() % 100;
+            if(i == j)
+            v[i][j] = v[j][i] = 0;
+
+            else
+            v[i][j] = v[j][i] = 1+ (int)(rand() % 9) ;
+
         }
     }
-
 
 
     puts("Matriz com os valores do grafo");
@@ -270,7 +273,7 @@ int main(void)
 
 // floyd warshall
 
-    shortestPath(v, A, F, n, listCm);   
+    shortestPath(v, 0, 1, n, listCm);   
 
 
 

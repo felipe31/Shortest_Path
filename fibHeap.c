@@ -77,14 +77,12 @@ NoHeapFib * insereFib(HeapFib* H, int custo){
 	(H -> qtdNos)++;
 	return novoNo;
 }
-//int dragonball = 0;
+
 
 NoHeapFib * insereFibNoPronto(HeapFib* H, NoHeapFib* No){
 	assert(H);
 	assert(No);
-    
-//    printf("%d insere ", dragonball++);
-
+	
 	if (H->noMin == NULL){
 		H->noMin = No;
 		No->esq = No->dir = No;
@@ -239,13 +237,16 @@ NoHeapFib * extractMin(HeapFib * H)
 			noExtraido->dir = filho;
 
 			aux = filho;
+            //        puts("james extract     |    ");   
 			
 			do
 			{
+			//	printf("filho: %d aux: %d \n", filho->custo, aux->custo );
 				aux->pai= NULL;
-				aux = aux->esq;
+				aux = aux->dir;
 
 			}while(aux != filho);
+              //      puts(" bond  extract   |    ");   
 
 		}
 /*********************** Remove noExtraido da lista de raizes ***********************/
