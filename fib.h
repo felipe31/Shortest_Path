@@ -32,7 +32,7 @@ typedef struct HeapFib
 typedef struct verticeDjk
 {
 	
-	NoHeapFib * noFib;
+	NoHeapFib noFib;
 	int verticeId;
 	struct verticeDjk * predec;
 

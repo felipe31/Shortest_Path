@@ -1,5 +1,5 @@
 #include "fib.h"
-
+#include <math.h>
 /*---------------------------------------------- INICIALIZAR ----------------------------------------------*/
 
 HeapFib * makeHeapFib()
@@ -17,9 +17,8 @@ HeapFib * makeHeapFib()
 
 /*---------------------------------------------- IMPRIMIR ----------------------------------------------*/
 
-int G = 0;
 void imprimir( NoHeapFib* No, NoHeapFib * pai){
-	printf("Elemento %d: %d   ", G++,  No == NULL ? INT_MIN : No -> custo);
+	printf("Elemento: %d   ", No == NULL ? INT_MIN : No -> custo);
 
 /*	if( No->filho != NULL){
 		imprimir( No->filho, No->filho);
@@ -32,7 +31,7 @@ void imprimir( NoHeapFib* No, NoHeapFib * pai){
 
 
 void imprimirHeapFib(HeapFib* H){
-	G = 1;
+
 	if(H -> noMin)
 		imprimir(H->noMin, H->noMin);
 	else 
@@ -123,6 +122,8 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 	(y -> dir) -> esq = y -> esq;
 	(y -> esq) -> dir = y -> dir;
 
+	if(x->dir == x)
+		H -> noMin = x;
 
 /*********************** Y vira filho de X ***********************/
 
@@ -145,6 +146,7 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 
 
 	(x -> grau)++;
+
 	y -> marca = 0;
 	y -> pai = x;
 }
@@ -153,30 +155,49 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 void consolidar(HeapFib * H){
 	assert(H);
 	
-	NoHeapFib **a = (NoHeapFib **) calloc(H->qtdNos, sizeof(NoHeapFib *));
+	int d = (log(H->qtdNos))/(log(2));
+	NoHeapFib **a = (NoHeapFib **) calloc(d, sizeof(NoHeapFib *));
 	int i, grau;
-	NoHeapFib * y, * troca, * x = H->noMin;
+	NoHeapFib * y, * troca, * x;
+
+	y = troca = NULL;
+ 	x = H->noMin;
+
+
 
 	do{
 
 		grau = x->grau;
+printf("grau = %d\n", grau );
 
-		while(a[grau]){
+puts("tt");
+		while(a[grau])
+		{
 			y = a[grau];
+
 			if (x->custo > y->custo)
 			{
+
 				troca = x;
 				x = y;
 				y = troca;
+
 			}
+			
 
 			heapFibLink(H, y, x);
+			
+			if(x->dir == x || H->noMin == y)
+				H->noMin = x;
+
 			a[grau] = NULL;
 			grau++;
 
 		}
-	
+puts("yy");
+
 		a[grau] = x;
+
 		x = x->dir;
 
 	}while(x != H -> noMin);
@@ -184,7 +205,7 @@ void consolidar(HeapFib * H){
 
 	H->noMin = NULL;
 
-	for(i = 0; i < H -> qtdNos; i++)
+	for(i = 0; i < d; i++)
 	{
 		if( a[i] )
 		{
@@ -209,6 +230,7 @@ void consolidar(HeapFib * H){
 			}
 		}
 	}
+
 }
 
 
@@ -245,6 +267,7 @@ NoHeapFib * extractMin(HeapFib * H)
 				aux->pai= NULL;
 				aux = aux->dir;
 
+
 			}while(aux != filho);
               //      puts(" bond  extract   |    ");   
 
@@ -263,6 +286,7 @@ NoHeapFib * extractMin(HeapFib * H)
 			H->noMin = noExtraido->dir;
 
 			consolidar(H);
+
 		}
 
 		H->qtdNos--;

@@ -47,23 +47,24 @@ verticeDjk * dijkstra (int ** v, int o, int n)
 
     caminhoMin[o].verticeId = o;
 
-    caminhoMin[o].noFib = (NoHeapFib *) malloc(sizeof(NoHeapFib));
-    if(!caminhoMin[o].noFib) return NULL;
+    caminhoMin[o].noFib.custo = 0;
 
-    caminhoMin[o].noFib -> custo = 0;
-
-    insereFibNoPronto(heap, caminhoMin[o].noFib);
+    insereFibNoPronto(heap, &caminhoMin[o].noFib);
     
     no = extractMin(heap);
 
     while(no)
     {
 
-        ex = no->custo;
 
+        ex = ((verticeDjk *)no)->verticeId;
+
+//printf("ex: %d ... custo %d\n", ex, no->custo);
         // for que explora os vértices que tem ligação com ex
         for(i = 0; i < n; i++)
         {
+
+//printf("                i = %d\n", i);
 
             if (v[ex][i] != -1)
             {
@@ -74,36 +75,34 @@ verticeDjk * dijkstra (int ** v, int o, int n)
                  * Se for então o caminhoMin é atualizado
                  * e visitado guarda o novo valor mínimo para o vértice
                  */
-                if(caminhoMin[i].noFib){
+                if(caminhoMin[i].predec)
+                {
 
-                    if((v[ex][i] + caminhoMin[ex].noFib -> custo) < caminhoMin[i].noFib -> custo){
-                        
-                        decreaseKey(heap , caminhoMin[i].noFib,  (v[ex][i] + caminhoMin[ex].noFib -> custo), &caminhoMin[ex]);
+                    if((v[ex][i] + caminhoMin[ex].noFib.custo) < caminhoMin[i].noFib.custo){
+
+                        decreaseKey(heap , &caminhoMin[i].noFib,  (v[ex][i] + caminhoMin[ex].noFib.custo), &caminhoMin[ex]);
                     }
                 }
-
                 else
                 {
 
                         caminhoMin[i].predec = &caminhoMin[ex];
                         caminhoMin[i].verticeId = i;
-                       
-                        caminhoMin[i].noFib = (NoHeapFib *) malloc(sizeof(NoHeapFib));
-                        if(!caminhoMin[i].noFib) return NULL;
     
-                        caminhoMin[i].noFib -> custo = v[ex][i] + caminhoMin[ex].noFib -> custo;
+                        caminhoMin[i].noFib.custo = v[ex][i] + caminhoMin[ex].noFib.custo;
 
-                        insereFibNoPronto(heap, caminhoMin[i].noFib);
+                        insereFibNoPronto(heap, &caminhoMin[i].noFib);
                 }
 
             }
 
+
         }
 
-
         // ex recebe o índice do vértice a ser explorado
-  
+        //imprimirHeapFib(heap);
         no = extractMin(heap);
+
     }
 
     printf("Os calculos de menor caminho para a origem %d foram feitos\n", o);
@@ -117,7 +116,7 @@ verticeDjk * dijkstra (int ** v, int o, int n)
 
     for(i = 0; i < n; i++)
     {
-        printf("%d = %d\n", i, caminhoMin[i].noFib -> custo);
+        printf("%d = %d\n", i, caminhoMin[i].noFib.custo);
     }
     puts("");
 
@@ -202,7 +201,7 @@ int main(void)
 
  
     int **v;
-    int n = 10 ;
+    int n = 50;
 
     int i;
     int j;
@@ -249,10 +248,10 @@ int main(void)
         for (j = 0 + i2++ ; j < n; ++j)
         {
             if(i == j)
-            v[i][j] = v[j][i] = 0;
+            v[i][j] = v[j][i] = -1;
 
             else
-            v[i][j] = v[j][i] = 1+ (int)(rand() % 9) ;
+            v[i][j] = v[j][i] = 1+ (int)(rand() % 10) ;
 
         }
     }
