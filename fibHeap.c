@@ -1,5 +1,6 @@
 #include "fib.h"
-#include <math.h>
+#include "math.h"
+//http://www.sanfoundry.com/cpp-program-implement-fibonacci-heap/
 /*---------------------------------------------- INICIALIZAR ----------------------------------------------*/
 
 HeapFib * makeHeapFib()
@@ -15,29 +16,67 @@ HeapFib * makeHeapFib()
 }
 
 
+/*---------------------------------------------- CRIA NÓ ----------------------------------------------*/
+NoHeapFib * criaNoFib(int custo)
+{
+	NoHeapFib * no = (NoHeapFib *) malloc(sizeof(NoHeapFib));
+	if(!no) return NULL;
+
+	no->pai = NULL;
+	no->filho = NULL;
+	no->custo = custo;
+	no->grau = 0;
+	no->marca = 0; 	
+	no->esq = no->dir = no;
+
+	return no;
+}
+
+
 /*---------------------------------------------- IMPRIMIR ----------------------------------------------*/
 
-void imprimir( NoHeapFib* No, NoHeapFib * pai){
-	printf("Elemento: %d   ", No == NULL ? INT_MIN : No -> custo);
+void imprimir( NoHeapFib* no){
+	assert(no);
 
-/*	if( No->filho != NULL){
-		imprimir( No->filho, No->filho);
-	}
-*/
-	if( No->dir != pai){
-		imprimir( No->dir, pai);
-	}
+	NoHeapFib * filho = no;
+
+	do
+	{
+		printf("%d ", no->custo);
+
+		if (no->filho)
+		{
+			printf("V ");
+			imprimir(no->filho);
+			printf("ˆ ");
+
+		}
+
+		no = no->dir;
+
+		if(no != filho)
+			printf("-> ");
+
+
+	}while(no != filho);
 }
 
 
 void imprimirHeapFib(HeapFib* H){
+	printf("\n");
 
-	if(H -> noMin)
-		imprimir(H->noMin, H->noMin);
+	if(!H->noMin)
+	{	
+		printf("Heap vazio\n");
+		return;
+	}
 	else 
-		printf("Heap vazio!");
+	{
+		printf("Itens do Heap\n");
+		imprimir(H->noMin);
+	}
 
-	puts("");
+	puts("\n");
 }	
 
 
@@ -47,62 +86,38 @@ void imprimirHeapFib(HeapFib* H){
 NoHeapFib * insereFib(HeapFib* H, int custo){
 	assert(H);
 
-	NoHeapFib* novoNo = (NoHeapFib*) malloc( sizeof( NoHeapFib));
-	if(novoNo == NULL) return novoNo;
+	NoHeapFib * no = criaNoFib(custo);
+	if(!no) return NULL;
 
-	novoNo->pai = NULL;
-	novoNo->filho = NULL;
-	novoNo->custo = custo;
-	novoNo->grau = 0;
-	novoNo->marca = 0; 
-
-
-	if ( H->noMin == NULL){
-		novoNo->esq = novoNo;
-		novoNo->dir = novoNo;
-		H->noMin = novoNo;
-	}
-	else{
-		novoNo->esq = (H -> noMin)->esq;
-		(H -> noMin)->esq = novoNo;
-		novoNo->dir = (H -> noMin);
-		(novoNo->esq)->dir = novoNo;
-
-		if ( custo < (H -> noMin) -> custo){
-			(H -> noMin) = novoNo;
-		}
-	}
-
-	(H -> qtdNos)++;
-	return novoNo;
+	return insereFibNoPronto(H, no);
 }
 
 
-NoHeapFib * insereFibNoPronto(HeapFib* H, NoHeapFib* No){
+NoHeapFib * insereFibNoPronto(HeapFib* H, NoHeapFib* no){
 	assert(H);
-	assert(No);
+	assert(no);
 	
 	if (H->noMin == NULL){
-		H->noMin = No;
-		No->esq = No->dir = No;
+		H->noMin = no;
+		no->esq = no->dir = no;
 	}
 
 	else{
-		No->esq = H->noMin->esq;
-		H->noMin->esq = No;
-		No->esq->dir = No;
-		No->dir = H->noMin;
+		no->esq = H->noMin->esq;
+		H->noMin->esq = no;
+		no->esq->dir = no;
+		no->dir = H->noMin;
 	}
 
-	No->pai = NULL;
-	No->filho = NULL;
-	No->marca = 0;
+	no->pai = NULL;
+	no->filho = NULL;
+	no->marca = 0;
 	H->qtdNos++;
 
-	if (No->custo < H->noMin->custo)
-		H->noMin = No;
+	if (no->custo < H->noMin->custo)
+		H->noMin = no;
 
-	return No;
+	return no;
 
 }
 
@@ -116,13 +131,10 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 	assert(H);
 
 /*********************** Remove Y da lista de raizes ***********************/
-	if (H -> noMin == y)
-		H -> noMin = y -> dir;
-
 	(y -> dir) -> esq = y -> esq;
 	(y -> esq) -> dir = y -> dir;
 
-	if(x->dir == x)
+	if(x->dir == x || H -> noMin == y)
 		H -> noMin = x;
 
 /*********************** Y vira filho de X ***********************/
@@ -130,8 +142,7 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 	if(x -> filho == NULL)
 	{
 	 	x -> filho = y;
-	 	y -> esq = y;
-	 	y -> dir = y;
+	 	y -> esq = y -> dir = y;
 
 	}
 
@@ -155,7 +166,10 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 void consolidar(HeapFib * H){
 	assert(H);
 	
-	int d = (log(H->qtdNos))/(log(2));
+	int d = H->qtdNos; //(log(H->qtdNos))/(log(1.61803));
+
+	//printf("qtdNos: %d\nd: %d", H->qtdNos, d );
+
 	NoHeapFib **a = (NoHeapFib **) calloc(d, sizeof(NoHeapFib *));
 	int i, grau;
 	NoHeapFib * y, * troca, * x;
@@ -168,9 +182,7 @@ void consolidar(HeapFib * H){
 	do{
 
 		grau = x->grau;
-printf("grau = %d\n", grau );
 
-puts("tt");
 		while(a[grau])
 		{
 			y = a[grau];
@@ -184,19 +196,18 @@ puts("tt");
 
 			}
 			
-
 			heapFibLink(H, y, x);
 			
 			if(x->dir == x || H->noMin == y)
 				H->noMin = x;
 
 			a[grau] = NULL;
-			grau++;
+			grau = x->grau;
 
 		}
-puts("yy");
 
 		a[grau] = x;
+
 
 		x = x->dir;
 
@@ -207,7 +218,7 @@ puts("yy");
 
 	for(i = 0; i < d; i++)
 	{
-		if( a[i] )
+		if(a[i])
 		{
 			if(!(H->noMin))
 			{
@@ -252,24 +263,22 @@ NoHeapFib * extractMin(HeapFib * H)
 		{
 /*********************** Insere todos os filhos de noExtraido na lista de raizes ***********************/
 
-			filho->esq->dir = noExtraido->dir;
-			noExtraido->dir->esq = filho->esq;
-
-			filho->esq = noExtraido;
-			noExtraido->dir = filho;
-
 			aux = filho;
-            //        puts("james extract     |    ");   
 			
 			do
 			{
-			//	printf("filho: %d aux: %d \n", filho->custo, aux->custo );
 				aux->pai= NULL;
 				aux = aux->dir;
 
 
 			}while(aux != filho);
-              //      puts(" bond  extract   |    ");   
+
+			filho->esq->dir = noExtraido->dir;
+			noExtraido->dir->esq = filho->esq;
+
+			filho->esq = noExtraido;
+			noExtraido->dir = filho;
+			noExtraido -> filho = NULL;
 
 		}
 /*********************** Remove noExtraido da lista de raizes ***********************/
@@ -284,9 +293,10 @@ NoHeapFib * extractMin(HeapFib * H)
 			noExtraido->dir->esq = noExtraido->esq;
 
 			H->noMin = noExtraido->dir;
-
+	//imprimirHeapFib(H);
 			consolidar(H);
-
+	puts("\ndepoisi\n");
+	imprimirHeapFib(H);
 		}
 
 		H->qtdNos--;
@@ -308,13 +318,13 @@ void cut(HeapFib* H, NoHeapFib* x, NoHeapFib* y)
 
     if(y -> filho == x)
     {
-        if(x -> esq == x)
+        if(x -> dir == x)
         {
             y -> filho = NULL;
         }
         else
         {
-            y -> filho = x -> esq;
+            y -> filho = x -> dir;
         }
     }
 
@@ -348,11 +358,10 @@ void cascadingCut(HeapFib* H, NoHeapFib* y)
 }
 
 
-void decreaseKey(HeapFib* H, NoHeapFib* x , int k, verticeDjk * predec)
+void decreaseKey(HeapFib* H, NoHeapFib* x , int k)
 {
     assert(H);
     assert(x);
-    assert(predec);
 
     if(k > x ->  custo) 
     {
@@ -362,11 +371,7 @@ void decreaseKey(HeapFib* H, NoHeapFib* x , int k, verticeDjk * predec)
 
     x -> custo = k;
 
-    verticeDjk * x2 = (verticeDjk *) x;
-
-    x2 -> predec = predec;
-
-    NoHeapFib* y = x->pai;
+    NoHeapFib * y = x->pai;
 
     if(y != NULL && x -> custo < y -> custo)
     {
