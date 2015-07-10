@@ -33,6 +33,7 @@ verticeDjk * dijkstra (int ** v, int o, int n)
     // Vetor que será retornado e contém o anterior do caminho
     // mínimo para cada elemento
     verticeDjk * caminhoMin = (verticeDjk *) calloc(n, sizeof(verticeDjk));
+    if(caminhoMin == NULL) return NULL;
 
     //NoHeapFib ** ptrFib = (NoHeapFib **) calloc(n, sizeof(NoHeapFib *));
 
@@ -79,20 +80,22 @@ verticeDjk * dijkstra (int ** v, int o, int n)
                 {
 
                     if((v[ex][i] + caminhoMin[ex].noFib.custo) < caminhoMin[i].noFib.custo){
-
-                        decreaseKey(heap , &caminhoMin[i].noFib,  (v[ex][i] + caminhoMin[ex].noFib.custo), &caminhoMin[ex]);
+//printf("                novo custo %d\n", v[ex][i] + caminhoMin[ex].noFib.custo);
+                        decreaseKey(heap , &caminhoMin[i].noFib,  (v[ex][i] + caminhoMin[ex].noFib.custo));
+                        caminhoMin[i].predec = &caminhoMin[ex];
                     }
                 }
                 else
                 {
-
-                        caminhoMin[i].predec = &caminhoMin[ex];
                         caminhoMin[i].verticeId = i;
     
                         caminhoMin[i].noFib.custo = v[ex][i] + caminhoMin[ex].noFib.custo;
 
                         insereFibNoPronto(heap, &caminhoMin[i].noFib);
+                        caminhoMin[i].predec = &caminhoMin[ex];
                 }
+        
+                
 
             }
 
@@ -105,21 +108,21 @@ verticeDjk * dijkstra (int ** v, int o, int n)
 
     }
 
-    printf("Os calculos de menor caminho para a origem %d foram feitos\n", o);
+    //printf("Os calculos de menor caminho para a origem %d foram feitos\n", o);
 
 
 
     /*
      * for para imprimir a lista de camínhos mínimos para a dada origem
      */
-    puts("A sua lista de caminhos mínimos é a seguinte:");
+/*    puts("A sua lista de caminhos mínimos é a seguinte:");
 
     for(i = 0; i < n; i++)
     {
         printf("%d = %d\n", i, caminhoMin[i].noFib.custo);
     }
     puts("");
-
+*/
 
     return caminhoMin;
 }
@@ -182,8 +185,8 @@ void shortestPath(int ** v, int origem, int destino, int n, verticeDjk ** listCm
     //if(!listCm[origem])
         listCm[origem] = dijkstra(v, origem, n);
 
-    imprimeCm(listCm[origem], destino);
-    puts("");
+    //imprimeCm(listCm[origem], destino);
+    //puts("");
 
     return;
 
@@ -201,7 +204,7 @@ int main(void)
 
  
     int **v;
-    int n = 50;
+    int n = 300;
 
     int i;
     int j;
@@ -219,10 +222,10 @@ int main(void)
     if(!listCm) return 0;
 
 
-    for(i = 0; i < n; i++)
+    /*for(i = 0; i < n; i++)
     {
         listCm[i] = NULL;
-    }
+    }*/
 
     //memset(v, -1, sizeof(v));
 /*
@@ -245,13 +248,13 @@ int main(void)
 
     for (i = 0; i < n; ++i)
     {
-        for (j = 0 + i2++ ; j < n; ++j)
+        for (j = i2++ ; j < n; ++j)
         {
             if(i == j)
-            v[i][j] = v[j][i] = -1;
+                v[i][j] = -1;
 
             else
-            v[i][j] = v[j][i] = 1+ (int)(rand() % 10) ;
+                v[i][j] = v[j][i] = 1+ (int)(rand() % 10) ;
 
         }
     }
@@ -272,7 +275,7 @@ int main(void)
 
 // floyd warshall
 
-    shortestPath(v, 0, 1, n, listCm);   
+    shortestPath(v, 0, 1, n, listCm);
 
 
 
