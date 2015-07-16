@@ -85,11 +85,14 @@ NoHeapFib * insereFib(HeapFib* H, int custo){
 
 	NoHeapFib * no = criaNoFib(custo);
 	if(!no) return NULL;
-
+	no->filho = NULL;
+	
 	return insereFibNoPronto(H, no);
 }
 
-
+/*
+ * Considera-se que os filhos do nó a ser inserido já estão devidamente corretos
+ */
 NoHeapFib * insereFibNoPronto(HeapFib* H, NoHeapFib* no){
 	assert(H);
 	assert(no);
@@ -107,7 +110,6 @@ NoHeapFib * insereFibNoPronto(HeapFib* H, NoHeapFib* no){
 	}
 
 	no->pai = NULL;
-	no->filho = NULL;
 	no->marca = 0;
 	H->qtdNos++;
 
