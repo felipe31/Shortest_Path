@@ -131,7 +131,7 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 	(y -> dir) -> esq = y -> esq;
 	(y -> esq) -> dir = y -> dir;
 
-	if(x->dir == x || H -> noMin == y)
+	if(H -> noMin == y)
 		H -> noMin = x;
 
 /*********************** Y vira filho de X ***********************/
