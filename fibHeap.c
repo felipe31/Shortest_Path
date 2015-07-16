@@ -26,7 +26,7 @@ NoHeapFib * criaNoFib(int custo)
 	no->filho = NULL;
 	no->custo = custo;
 	no->grau = 0;
-	no->marca = 0; 	
+	no->marca = 0;
 	no->esq = no->dir = no;
 
 	return no;
@@ -36,29 +36,27 @@ NoHeapFib * criaNoFib(int custo)
 /*---------------------------------------------- IMPRIMIR ----------------------------------------------*/
 
 void imprimir( NoHeapFib* no){
-	assert(no);
-
-	NoHeapFib * filho = no;
+	NoHeapFib * aux = no;
 
 	do
 	{
 		printf("%d ", no->custo);
 
-		if (no->filho)
+		if (no->aux)
 		{
 			printf("V ");
-			imprimir(no->filho);
+			imprimir(no->aux);
 			printf("ˆ ");
 
 		}
 
 		no = no->dir;
 
-		if(no != filho)
+		if(no != aux)
 			printf("-> ");
 
 
-	}while(no != filho);
+	}while(no != aux);
 }
 
 
@@ -77,8 +75,7 @@ void imprimirHeapFib(HeapFib* H){
 	}
 
 	puts("\n");
-}	
-
+}
 
 
 /*---------------------------------------------- INSERIR ----------------------------------------------*/
