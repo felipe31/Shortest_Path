@@ -208,7 +208,7 @@ void consolidar(HeapFib * H){
 		a[grau] = x;
 
 
-		x = x->dir;
+		//x = x->dir;
 
 	}while(x != H -> noMin);
 
@@ -378,6 +378,6 @@ void decreaseKey(HeapFib* H, NoHeapFib* x , int k)
         cascadingCut(H, y);
     }
 
-    if(x -> custo < (H->noMin) -> custo)
-        H->noMin = x;
+    if(H->noMin == NULL) H->noMin = x;
+    else if(x->custo < (H->noMin)->custo) H->noMin = x;
 }
