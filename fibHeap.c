@@ -165,7 +165,9 @@ void heapFibLink(HeapFib * H, NoHeapFib * y, NoHeapFib * x)
 void consolidar(HeapFib * H){
 	assert(H);
 	
-	int d = H->qtdNos; //(log(H->qtdNos))/(log(1.61803));
+	int d = 1 + (log(H->qtdNos))/(log(1.61803));
+	// para compilar usar -lm no final do comando para funcionar
+	// $ gcc dijkstraFib.c fibHeap.c -lm
 
 	//printf("qtdNos: %d\nd: %d", H->qtdNos, d );
 
@@ -208,7 +210,7 @@ void consolidar(HeapFib * H){
 		a[grau] = x;
 
 
-		//x = x->dir;
+		x = x->dir;
 
 	}while(x != H -> noMin);
 
