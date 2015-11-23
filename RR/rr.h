@@ -1,3 +1,6 @@
+#ifndef _RR_
+#define _RR_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -44,3 +47,5 @@ void g_print_graph(vertex *vertices, int size);
 void g_insert_edge(vertex *vertices, int tail, int head, int cost);
 
 edge *g_create_edge(int tail, int head, int cost);
+
+#endif
