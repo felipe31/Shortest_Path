@@ -1,3 +1,5 @@
+*.ignore
+
 # Object files
 *.o
 *.ko
