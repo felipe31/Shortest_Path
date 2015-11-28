@@ -11,7 +11,7 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue){
 		edge *aux = (graph+x->key)->predecessor;
 		while(aux){
 			aux->hot_line = 0;
-			aux = aux->next;
+			aux = aux->next_pred;
 		}
 		aux = (graph+x->pi)->adjacent;
 		while(aux){
@@ -19,7 +19,7 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue){
 				aux->hot_line = 1;
 				break;
 			}
-			aux = aux->next;
+			aux = aux->next_adj;
 		}
 		aux = x->adjacent;
 		while(aux){
@@ -32,11 +32,11 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue){
 					heap_insert((graph+aux->head_vertex)->key, (graph+aux->head_vertex)->pi, queue, (graph+aux->head_vertex)->min_cost);
 				}
 			}
-			aux = aux->next;
+			aux = aux->next_adj;
 		}
 	}
 }
 
 vertex *rr_mark_affected(vertex *graph, edge *edge_marked, vertex *auxiliary_list, vertex *affected_list){
-	
+
 }
