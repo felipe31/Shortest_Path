@@ -42,7 +42,7 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue);
 void rr_add_edge(vertex *graph, edge *edge_added);
 void rr_remove_edge(vertex *graph, edge *edge_removed);
 vertex *rr_mark_affected(vertex *graph, edge *edge_marked);
-rr_estimate_new_parents(vertex *graph, vertex *affected_list, heap *queue, edge vertex);
+rr_estimate_new_pi(vertex *graph, vertex *affected_list, heap *queue, edge vertex);
 
 
 /************************************************************************************************
