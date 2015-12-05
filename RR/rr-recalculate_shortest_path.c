@@ -8,15 +8,16 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue){
 		x = heap_extract_min(queue);
 		(graph+x->key)->pi = x->pi;
 		(graph+x->key)->min_cost = x->cost;
-		edge *aux = (graph+x->key)->predecessor;
-		while(aux){
-			aux->hot_line = 0;
-			aux = aux->next_pred;
-		}
+		// edge *aux = (graph+x->key)->predecessor;
+		// while(aux){
+		// 	aux->hot_line = 0;
+		// 	aux = aux->next_pred;
+		// }
 		aux = (graph+x->pi)->adjacent;
 		while(aux){
 			if(aux->head_vertex == (graph+x->key)){
 				aux->hot_line = 1;
+				graph+x
 				break;
 			}
 			aux = aux->next_adj;

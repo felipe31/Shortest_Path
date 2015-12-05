@@ -8,7 +8,7 @@
 
 
 typedef struct node{
-    int cost, pi, key;
+    int cost, pi, key;                  // primeiramente usar um vetor
 } node;
 
 typedef struct heap{
@@ -18,20 +18,19 @@ typedef struct heap{
 
 typedef struct edge {
     int head_vertex, cost, tail_vertex; // tail -> head
-    char hot_line; // hot_line = aresta faz parte do caminho mínimo
-    struct edge *next_pred; // prox na lista de predecessor
-    struct edge *next_adj;  // prox na lista de adjacentes
+    char hot_line;                      // hot_line = aresta faz parte do caminho mínimo
+    struct edge *next_pred;             // prox na lista de predecessor
+    struct edge *next_adj;              // prox na lista de adjacentes
 } edge;
 
 typedef struct vertex {
     node heap_node;
 	int pi, min_cost;
-    int next_sp, key;
+    int key;
     char mark;
     edge *adjacent;
     edge *predecessor;
 } vertex;
-
 
 
 /************************************************************************************************
