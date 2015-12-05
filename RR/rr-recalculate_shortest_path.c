@@ -39,5 +39,14 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue){
 }
 
 vertex *rr_mark_affected(vertex *graph, edge *edge_marked, vertex *auxiliary_list, vertex *affected_list){
+<<<<<<< HEAD:RR/rr - recalculate_shortest_path().cpp
+	auxiliary_list = graph[edge_marked->head_vertex];
 
+	vertex *aux = auxiliary_list;
+	while(auxiliary_list){
+		while(aux->){}
+	}
+=======
+
+>>>>>>> 0d5329bbfa5a0aa33c357b1bde947e82aa1ea18d:RR/rr-recalculate_shortest_path.c
 }
