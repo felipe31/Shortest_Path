@@ -58,7 +58,7 @@ edge ** find_pointer_edge_adj(vertex *tail, edge *edge_ref);
 ****************************** ALGORITMOS DE MANIPULAÇÃO DO GRAFO *******************************
 *************************************************************************************************
 ************************************************************************************************/
-void g_free_graph(vertex *graph, int size);
+void g_free_graph(vertex **graph, int size);
 
 vertex *g_create_graph(int size);
 
@@ -84,6 +84,6 @@ void heap_update(node * heap_node, int new_pi, int new_cost, heap * queue, int p
 
 int heap_insert(node * node_to_insert, heap * queue);       // Retorna 0 se o nó foi inserido com sucesso no heap e 1 caso contrário
 
-void heapfy(heap * queue);  
+void heapfy(heap * queue);
 
 #endif

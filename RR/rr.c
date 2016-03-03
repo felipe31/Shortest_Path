@@ -234,22 +234,24 @@ edge * find_edge_pred(vertex * head, int key)
 *************************************************************************************************
 ************************************************************************************************/
 
-void g_free_graph(vertex *graph, int size)
+void g_free_graph(vertex **graph, int size)
 {
-	if(!graph || size < 1) return;
+	if(!(*graph) || size < 1) return;
 	int i;
 	edge * edge_aux;
 
 	for (i = 0; i < size; i++)
 	{
-		edge_aux = graph[i].adjacent;
+		edge_aux = (*graph)[i].adjacent;
 		while(edge_aux)
 		{
-			graph[i].adjacent = graph[i].adjacent->next_adj;
+			(*graph)[i].adjacent = (*graph)[i].adjacent->next_adj;
 			free(edge_aux);
-			edge_aux = graph[i].adjacent;
+			edge_aux = (*graph)[i].adjacent;
 		}
 	}
+	free(*graph);
+	*graph = NULL;
 }
 
 vertex *g_create_graph(int size)
@@ -258,6 +260,11 @@ vertex *g_create_graph(int size)
 
 	vertex * graph = (vertex *) calloc(size, sizeof(vertex));
 	if(!graph) return NULL;
+
+	for (; size > 0; --size)
+	{
+		graph[size-1].heap_node.key = size-1;
+	}
 
 	return graph;
 }
@@ -280,7 +287,7 @@ void g_print_graph(vertex *graph, int size)
 
 		while(edge_aux)
 		{
-			printf("%d - ", edge_aux->head_vertex );
+			printf("%d {cost %d} - ", edge_aux->head_vertex, edge_aux->cost );
 			edge_aux = edge_aux->next_adj;
 		}
 
