@@ -351,7 +351,7 @@ node * heap_extract(heap * queue)
 	if(queue->control > 0)
 	{
 		queue->node_vector[0] = queue->node_vector[queue->control];
-		heapfy(queue);
+		heapfy(queue, 0);
 	}
 
 	return extracted;
@@ -409,7 +409,26 @@ int heap_insert(node * node_to_insert, heap * queue)       // Retorna 0 se o nó
 	return 0;
 }
 
-void heapfy(heap * queue)
+void heapfy(heap * queue, int idx)
 {
+	int l_child, r_child, smallest;
+	node * aux;
 
+	l_child = 2 * idx + 1;
+	r_child = 2 * idx + 2;
+	if ((l_child < queue->control)  && ((queue->node_vector[l_child])->cost < (queue->node_vector[idx])->cost))
+		smallest = l_child;
+	else
+		smallest = idx;
+	if ((r_child < queue->control)  && ((queue->node_vector[r_child])->cost < (queue->node_vector[smallest])->cost))
+		smallest = r_child;
+	if (smallest != idx)
+	{
+		aux = queue->node_vector[smallest];
+		queue->node_vector[smallest] = queue->node_vector[idx];
+		queue->node_vector[idx] = aux;
+
+		heapfy(queue, smallest);
+	}
+return;
 }
