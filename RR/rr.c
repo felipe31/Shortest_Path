@@ -18,7 +18,7 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue)
 
 	node * min = NULL;
 	edge * edge_aux;
-	int cost, pos;
+	int pos;
 
 	while(queue->node_vector[0])
 	{
@@ -48,7 +48,7 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue)
 			{
 				if(graph[edge_aux->head_vertex].heap_node.cost > min->cost + edge_aux->cost )									//relax();
 				{
-					heap_update((node *) graph + edge_aux->head_vertex, min->key, min->cost + edge_aux->cost, queue, pos);
+					heap_update(min->key, min->cost + edge_aux->cost, queue, pos);
 				}
 			}
 			else
@@ -96,7 +96,7 @@ void rr_add_edge(vertex *graph, int tail, int head, int cost){
 	graph[head].heap_node.pi = tail;
 
 	if(heap_insert((node *)graph + head, queue))
-		printf("No %d nao inserido\n", graph[head]);
+		printf("No %d nao inserido\n", graph[head].heap_node.key);
 
 	rr_recalculate_shortest_path(graph, queue);
 
@@ -264,6 +264,10 @@ vertex *g_create_graph(int size)
 	for (; size > 0; --size)
 	{
 		graph[size-1].heap_node.key = size-1;
+		graph[size-1].heap_node.cost = INT_MAX;
+		graph[size-1].heap_node.pi = -1;
+		graph[size-1].pi = -1;
+
 	}
 
 	return graph;
@@ -283,7 +287,7 @@ void g_print_graph(vertex *graph, int size)
 	for(i = 0; i < size; ++i)
 	{
 		edge_aux = graph[i].adjacent;
-		printf("Arestas do vertice %d:\n", i);
+		printf("Vertice\t\t%d\npi:\t\t%d\nnode.pi:\t%d\narestas:\t", i, graph[i].pi, graph[i].heap_node.pi);
 
 		while(edge_aux)
 		{
@@ -364,7 +368,7 @@ int heap_checks_presence(node * heap_node, heap * queue)  	// Retorna 0 se o nó
 	node ** vector = queue->node_vector;
 	int i;
 
-	for (int i = 0; i < queue->control; ++i)
+	for (i = 0; i < queue->control; ++i)
 	{
 		if(vector[i] == heap_node)
 			return i;
@@ -372,7 +376,7 @@ int heap_checks_presence(node * heap_node, heap * queue)  	// Retorna 0 se o nó
 	return 0;
 }
 
-void heap_update(node * heap_node, int new_pi, int new_cost, heap * queue, int pos)
+void heap_update(int new_pi, int new_cost, heap * queue, int pos)
 {
 
 	queue->node_vector[pos]->pi = new_pi;
@@ -430,5 +434,24 @@ void heapfy(heap * queue, int idx)
 
 		heapfy(queue, smallest);
 	}
-return;
+	return;
+}
+
+void heap_print(heap * queue)
+{
+	int i;
+	if(!queue)
+		printf("Heap invalido\n");
+	else if(queue->control)
+	{
+		for ( i = 0; i < queue->control; i++)
+		{
+			printf("Elemento %d:\ncost:\t%d\npi:\t%d\nkey:\t%d\n\n", i, (queue->node_vector[i])->cost, (queue->node_vector[i])->pi, (queue->node_vector[i])->key);
+		}
+	}
+	else
+		printf("Heap vazio!\n\n");
+
+	puts("\n");
+	return;
 }

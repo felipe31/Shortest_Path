@@ -1,13 +1,12 @@
 #ifndef _RR_
 #define _RR_
 
-#define HEAP_SIZE 1000
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <limits.h>
 
+#define HEAP_SIZE 1000
 
 
 typedef struct node{
@@ -80,10 +79,12 @@ node * heap_extract(heap * queue);
 
 int heap_checks_presence(node * heap_node, heap * queue);  // Retorna 0 se o nó não pertence ao heap e 1 caso contrário
 
-void heap_update(node * heap_node, int new_pi, int new_cost, heap * queue, int pos);
+void heap_update(int new_pi, int new_cost, heap * queue, int pos);
 
 int heap_insert(node * node_to_insert, heap * queue);       // Retorna 0 se o nó foi inserido com sucesso no heap e 1 caso contrário
 
 void heapfy(heap * queue, int i);
+
+void heap_print(heap * queue);
 
 #endif
