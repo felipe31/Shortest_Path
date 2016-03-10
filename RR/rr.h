@@ -77,13 +77,15 @@ heap * heap_new();
 
 node * heap_extract(heap * queue);
 
-int heap_checks_presence(node * heap_node, heap * queue);  // Retorna 0 se o nó não pertence ao heap e 1 caso contrário
+int heap_checks_presence(node * heap_node, heap * queue);  // Retorna 0 se o nó não pertence ao heap, -1 caso haja erros e retorna a posição caso o nó pertença ao heap
 
 void heap_update(int new_pi, int new_cost, heap * queue, int pos);
 
 int heap_insert(node * node_to_insert, heap * queue);       // Retorna 0 se o nó foi inserido com sucesso no heap e 1 caso contrário
 
 void heapfy(heap * queue, int i);
+
+void heap_build(heap * queue);
 
 void heap_print(heap * queue);
 

@@ -47,9 +47,7 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue)
 			else if(pos == 1)
 			{
 				if(graph[edge_aux->head_vertex].heap_node.cost > min->cost + edge_aux->cost )									//relax();
-				{
 					heap_update(min->key, min->cost + edge_aux->cost, queue, pos);
-				}
 			}
 			else
 			{
@@ -363,7 +361,7 @@ node * heap_extract(heap * queue)
 
 int heap_checks_presence(node * heap_node, heap * queue)  	// Retorna 0 se o nó não pertence ao heap,
 {															// -1 caso haja erros e retorna a posição caso o nó pertença ao heap
-	if(!queue || heap_node) return -1;
+	if(!queue || !heap_node) return -1;
 
 	node ** vector = queue->node_vector;
 	int i;
@@ -378,38 +376,20 @@ int heap_checks_presence(node * heap_node, heap * queue)  	// Retorna 0 se o nó
 
 void heap_update(int new_pi, int new_cost, heap * queue, int pos)
 {
-
 	queue->node_vector[pos]->pi = new_pi;
 	queue->node_vector[pos]->cost = new_cost;
+	heap_build(queue);
+
 }
 
-int heap_insert(node * node_to_insert, heap * queue)       // Retorna 0 se o nó foi inserido com sucesso no heap e 1 caso contrário
+int heap_insert(node * node_to_insert, heap * queue)       // Retorna 0 se o nó foi inserido com sucesso no heap e -1 caso contrário
 {
-	if(!queue || !node_to_insert) return 1;
-	if(queue->control == HEAP_SIZE) return 1;
+	if(!queue || !node_to_insert) return -1;
+	if(queue->control == HEAP_SIZE) return -1;
 
 	queue->node_vector[queue->control] = node_to_insert;
-	int pos = queue->control;
-	int pos_parent = (queue->control-1)/2;
-	node * swap;
-
 	queue->control++;
-
-	while(pos_parent > -1)
-	{
-		if(queue->node_vector[pos] < queue->node_vector[pos_parent])
-		{
-			swap = queue->node_vector[pos];
-			queue->node_vector[pos] = queue->node_vector[pos_parent];
-			queue->node_vector[pos_parent] = swap;
-
-			pos = pos_parent;
-			pos_parent = (pos-1)/2;
-			continue;
-		}
-		break;
-	}
-
+	heap_build(queue);
 	return 0;
 }
 
@@ -437,6 +417,40 @@ void heapfy(heap * queue, int idx)
 	return;
 }
 
+void heap_build(heap * queue)
+{
+	int i;
+	for (i = (queue->control-2)/2; i > -1 ; i--)
+		heapfy(queue, i);
+
+	return;
+}
+/*
+void heap_build(queue)
+{
+	int pos = queue->control;
+	int pos_parent = (queue->control-1)/2;
+	node * swap;
+
+
+	while(pos_parent > -1)
+	{
+		if(queue->node_vector[pos]->cost < queue->node_vector[pos_parent]->cost)
+		{
+			swap = queue->node_vector[pos];
+			queue->node_vector[pos] = queue->node_vector[pos_parent];
+			queue->node_vector[pos_parent] = swap;
+
+			pos = pos_parent;
+			pos_parent = (pos-1)/2;
+			continue;
+		}
+		break;
+	}
+
+}
+*/
+
 void heap_print(heap * queue)
 {
 	int i;
@@ -452,6 +466,6 @@ void heap_print(heap * queue)
 	else
 		printf("Heap vazio!\n\n");
 
-	puts("\n");
+		puts("\n");
 	return;
 }
