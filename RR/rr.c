@@ -20,14 +20,13 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue)
 	edge * edge_aux;
 	int pos;
 
-	while(queue->node_vector[0])
+	while(queue->control)
 	{
 		min = heap_extract(queue);
 		if(!min) return;
 
 		edge_aux = find_edge_pred((vertex *)min, ((vertex *) min)->pi);
-		if(!edge_aux) return;
-		edge_aux->hot_line = 0;
+		if(edge_aux) edge_aux->hot_line = 0;
 
 		edge_aux = find_edge_pred((vertex *)min, min->pi);
 		if(!edge_aux) return;
@@ -55,7 +54,7 @@ void rr_recalculate_shortest_path(vertex *graph, heap *queue)
 				{
 					graph[edge_aux->head_vertex].heap_node.cost = min->cost + edge_aux->cost;
 					graph[edge_aux->head_vertex].heap_node.pi = min->key;
-					if(heap_insert((node *) graph + edge_aux->head_vertex, queue))
+					if(heap_insert((node *) &graph[edge_aux->head_vertex], queue))
 						printf("No %d nao inserido\n", edge_aux->head_vertex);
 				}
 
@@ -89,11 +88,11 @@ void rr_add_edge(vertex *graph, int tail, int head, int cost){
 		return;
 	}
 
-
+	edge_added->hot_line = 1;
 	graph[head].heap_node.cost = new_cost;
 	graph[head].heap_node.pi = tail;
 
-	if(heap_insert((node *)graph + head, queue))
+	if(heap_insert((node *)(graph + head), queue))
 		printf("No %d nao inserido\n", graph[head].heap_node.key);
 
 	rr_recalculate_shortest_path(graph, queue);
@@ -136,6 +135,11 @@ void rr_remove_edge(vertex *graph, edge *edge_removed) // !!!!!!!!!!!!!!!!!!!!!!
 //     free(edge_removed);
 }
 
+
+void rr_print_sssp(vertex * graph)
+{
+
+}
 
 edge ** find_pointer_edge_adj(vertex *tail, edge *edge_ref)
 {
@@ -211,7 +215,7 @@ edge * find_edge_pred(vertex * head, int key)
 {
 	edge * edge_pred = head->predecessor;
 
-	if(edge_pred == NULL)
+	if(edge_pred == NULL || key == -1)
 		return NULL;
 
 	while(edge_pred->tail_vertex != key)
@@ -289,7 +293,7 @@ void g_print_graph(vertex *graph, int size)
 
 		while(edge_aux)
 		{
-			printf("%d {cost %d} - ", edge_aux->head_vertex, edge_aux->cost );
+			printf("%d {cost %d, sp %d} - ", edge_aux->head_vertex, edge_aux->cost, edge_aux->hot_line );
 			edge_aux = edge_aux->next_adj;
 		}
 

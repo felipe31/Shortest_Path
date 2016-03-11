@@ -50,7 +50,7 @@ edge * find_edge_adj(vertex * tail, int key);
 edge ** find_pointer_edge_pred(vertex *head, edge *edge_ref);
 edge ** find_pointer_edge_adj(vertex *tail, edge *edge_ref);
 
-
+void rr_print_sssp(vertex * graph);
 
 /************************************************************************************************
 *************************************************************************************************
