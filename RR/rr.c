@@ -102,38 +102,53 @@ void rr_add_edge(vertex *graph, int tail, int head, int cost){
 
 
 
-void rr_remove_edge(vertex *graph, edge *edge_removed) // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! REVER
+void rr_remove_edge(vertex *graph,  int tail, int head) // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! REVER
 {
-// 	heap *queue = heap_new();
-//
-// 	int tail = edge_removed->tail_vertex;
-// 	int head = edge_removed->head_vertex;
-//
-// 	edge ** edge_p = find_pointer_edge_adj(graph + tail, edge_removed);
-//     edge ** edge_p2 = find_pointer_edge_pred(graph + head, edge_removed);
-//
-// 	if(!edge_p)
-// 		return;
-//
-// 	*edge_p = edge_removed->next_adj;
-// 	*edge_p2 = edge_removed->next_pred;
-//
-// 	if(edge_removed->hot_line == 0)
-// 	{
-// 		free(edge_removed);
-//
-// 		return;
-// 	}
-//
-// 	edge_removed->hot_line = 0;
-//
-//     vertex *affected_list = rr_mark_affected(graph, edge_removed);
-//
-//     rr_estimate_new_pi(graph, affected_list, queue, edge_removed);
-//     rr_recalculate_shortest_path(graph, queue);
-//
-//     free(edge_removed);
+ 	heap *queue = heap_new();
+
+	edge * edge_removed = find_edge_adj(graph[tail], head);
+	if(!edge_removed) return;
+
+	edge ** edge_adj = find_pointer_edge_adj(graph+tail, edge_removed );
+	edge ** edge_pred = find_pointer_edge_pred(graph+head, edge_removed );
+	if(!edge_adj || !edge_pred)		return;
+
+	*edge_adj = edge_removed->next_adj;
+	*edge_pred = edge_removed->next_pred;
+
+	if(edge_removed->hot_line == 0)
+	{
+		free(edge_removed);
+
+		return;
+	}
+
+	edge_removed->hot_line = 0;
+
+	list *affected_list = rr_mark_affected(graph, edge_removed);
+
+    rr_estimate_new_pi(graph, affected_list, queue, edge_removed);
+    rr_recalculate_shortest_path(graph, queue);
+
+    free(edge_removed);
+	return;
 }
+
+vertex *rr_mark_affected(vertex *graph, edge *edge_marked)
+{
+	head_list * aux_list = list_new();
+	head_list * affected_list = list_new();
+
+	list_insert(aux_list, graph[edge_marked->head_vertex]);
+
+	while (aux_list->first)
+	{
+		
+	}
+
+
+}
+void rr_estimate_new_pi(vertex *graph, vertex *affected_list, heap *queue, edge vertex);
 
 
 void rr_print_sssp(vertex * graph)
@@ -472,4 +487,47 @@ void heap_print(heap * queue)
 
 		puts("\n");
 	return;
+}
+
+
+/************************************************************************************************
+*************************************************************************************************
+****************************** ALGORITMOS DE MANIPULAÇÃO DE LISTA *******************************
+*************************************************************************************************
+************************************************************************************************/
+
+head_list * list_new()
+{
+	return (head_list *) calloc(1, sizeof(head_list));
+}
+
+list * list_insert(head_list * h_list, vertex * v_list)
+{
+	if(!h_list || !v_list) return NULL;
+
+	list * l = (list *) calloc(1, sizeof(list));
+	if(l)
+	{
+		l->vtx = v_list;
+		if(h_list -> last)
+			h_list -> last -> next = l;
+		else
+			h_list->first = l;
+		h_list -> last = l;
+	}
+	return l;
+}
+
+vertex * list_remove(head_list * h_list)
+{
+	if(!h_list) return NULL;
+	if(!h_list->first) return NULL;
+
+	vertex * vtx = head_list->first->vtx;
+	list * aux = head_list->first;
+
+	head_list->first = head_list->first->next;
+
+	free(aux);
+	return vtx;
 }
