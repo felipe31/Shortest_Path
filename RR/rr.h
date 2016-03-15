@@ -10,7 +10,8 @@
 
 
 typedef struct node{
-    int cost, pi, key;                  // pi = pai no caminho minimo | cost = custo mínimo no caminho mínimo | key = nome do vértice
+    int cost, key;                      // cost = custo mínimo no caminho mínimo | key = nome do vértice
+    char mark;
 } node;                                 // primeiramente usar um vetor
 
 typedef struct heap{
@@ -28,7 +29,6 @@ typedef struct edge {
 typedef struct vertex {
     node heap_node;
     int pi;
-    char mark;
     edge *adjacent;                     // lista de adjacentes
     edge *predecessor;                  // lista de predecessores
 } vertex;
@@ -42,7 +42,7 @@ typedef struct head_list
 {
     list * first;
     list * last;
-}
+} head_list;
 
 /************************************************************************************************
 *************************************************************************************************
@@ -51,10 +51,9 @@ typedef struct head_list
 ************************************************************************************************/
 void rr_recalculate_shortest_path(vertex *graph, heap *queue);
 void rr_add_edge(vertex *graph, int tail, int head, int cost);
-void rr_remove_edge(vertex *graph, edge *edge_removed);
-vertex *rr_mark_affected(vertex *graph, edge *edge_marked);
-void rr_estimate_new_pi(vertex *graph, vertex *affected_list, heap *queue, edge vertex);
-
+void rr_remove_edge(vertex *graph,  int tail, int head);
+head_list *rr_mark_affected(vertex *graph, edge *edge_marked);
+void rr_estimate_new_pi(vertex *graph, head_list *affected_list, heap *queue);
 edge * find_edge_pred(vertex * head, int key);
 edge * find_edge_adj(vertex * tail, int key);
 edge ** find_pointer_edge_pred(vertex *head, edge *edge_ref);
@@ -89,7 +88,7 @@ node * heap_extract(heap * queue);
 
 int heap_checks_presence(node * heap_node, heap * queue);  // Retorna 0 se o nó não pertence ao heap, -1 caso haja erros e retorna a posição caso o nó pertença ao heap
 
-void heap_update(int new_pi, int new_cost, heap * queue, int pos);
+void heap_update(vertex * vtx, int new_pi, int new_cost, heap * queue);
 
 int heap_insert(node * node_to_insert, heap * queue);       // Retorna 0 se o nó foi inserido com sucesso no heap e 1 caso contrário
 

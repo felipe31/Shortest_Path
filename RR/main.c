@@ -17,11 +17,10 @@ int main(void)
     g_insert_edge(g, 1, 3, 2);
     g_insert_edge(g, 2, 4, 1);
     g_insert_edge(g, 3, 4, 1);
-    edge * g_insert_edge(vertex *graph, int tail, int head, int cost);
-
+    //edge * g_insert_edge(vertex *graph, int tail, int head, int cost);
 */
+
     g[0].heap_node.cost = 0;                                                     // Define origem
-    g[0].heap_node.pi = -2;                                                     // Define origem
     g[0].pi = -2;                                                     // Define origem
     rr_add_edge(g, 0, 1, 1);
     rr_add_edge(g, 0, 4, 6);
@@ -29,19 +28,17 @@ int main(void)
     rr_add_edge(g, 1, 3, 2);
     rr_add_edge(g, 2, 4, 1);
     rr_add_edge(g, 3, 4, 1);
-    rr_add_edge(g, 0, 2, 1);
-    g_print_graph(g, SIZE_G);
-    // void rr_add_edge(vertex *graph, int tail, int head, int cost);
 
-    // void rr_recalculate_shortest_path(vertex *graph, heap *queue);
-    // void rr_remove_edge(vertex *graph, edge *edge_removed);
-    // vertex *rr_mark_affected(vertex *graph, edge *edge_marked);
-    // void rr_estimate_new_pi(vertex *graph, vertex *affected_list, heap *queue, edge vertex);
-    // edge * find_edge_pred(vertex * head, int key);
-    // edge * find_edge_adj(vertex * tail, int key);
-    // edge ** find_pointer_edge_pred(vertex *head, edge *edge_ref);
-    // edge ** find_pointer_edge_adj(vertex *tail, edge *edge_ref);
-    // void rr_print_sssp(vertex * graph);
+    // heap * q = heap_new();
+    // heap_insert((node *) &g[0], q);
+    //
+    // rr_recalculate_shortest_path(g, q);
+    rr_add_edge(g, 0, 2, 1);
+
+    g_print_graph(g, SIZE_G);
+    rr_remove_edge(g, 0, 2);
+    g_print_graph(g, SIZE_G);
+
 
 
 /*  ***TESTE HEAP***
