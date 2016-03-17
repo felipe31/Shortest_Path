@@ -96,8 +96,6 @@ void rr_remove_edge(vertex *graph, int tail, int head)
 	if(!queue) return;
 
 	edge * edge_removed = find_edge_adj(graph+tail, head);
-	if(!edge_removed) return;
-
 	edge ** edge_adj = find_pointer_edge_adj(graph+tail, edge_removed );
 	edge ** edge_pred = find_pointer_edge_pred(graph+head, edge_removed );
 	if(!edge_adj || !edge_pred)	return;
@@ -150,7 +148,7 @@ head_list *rr_mark_affected(vertex *graph, edge *edge_marked)
 				graph[edge_aux->head_vertex].pi = -3;					// -3 indica que o nó foi afetado e está na lista
 
 				list_insert(aux_list, graph+edge_aux->head_vertex);
-				break;
+//				break;
 			}
 
 			edge_aux = edge_aux->next_adj;
@@ -172,7 +170,7 @@ void rr_estimate_new_pi(vertex *graph, head_list *affected_list, heap *queue)
 		edge_aux = vtx -> predecessor;
 		while (edge_aux)
 		{
-			if((graph+edge_aux->tail_vertex)->pi == -3)							// -3 indica que o nó foi afetado e está na lista
+			if((graph+edge_aux->tail_vertex)->pi != -3)							// -3 indica que o nó foi afetado e está na lista
 			{
 				if(vtx->heap_node.cost > graph[edge_aux->tail_vertex].heap_node.cost + edge_aux->cost )
 				{
@@ -566,6 +564,9 @@ vertex * list_remove(head_list * h_list)
 	list * aux = h_list->first;
 
 	h_list->first = h_list->first->next;
+
+	if(!h_list->first)
+		h_list->last = NULL;
 
 	free(aux);
 	return vtx;

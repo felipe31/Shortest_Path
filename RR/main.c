@@ -1,5 +1,5 @@
 #include "rr.h"
-#define SIZE_G 5
+#define SIZE_G 7
 
 
 int main(void)
@@ -22,21 +22,35 @@ int main(void)
 
     g[0].heap_node.cost = 0;                                                     // Define origem
     g[0].pi = -2;                                                     // Define origem
+    // rr_add_edge(g, 0, 1, 1);
+    // rr_add_edge(g, 0, 4, 6);
+    // rr_add_edge(g, 1, 2, 3);
+    // rr_add_edge(g, 1, 3, 2);
+    // rr_add_edge(g, 2, 4, 1);
+    // rr_add_edge(g, 3, 4, 1);
+
+
     rr_add_edge(g, 0, 1, 1);
-    rr_add_edge(g, 0, 4, 6);
-    rr_add_edge(g, 1, 2, 3);
-    rr_add_edge(g, 1, 3, 2);
-    rr_add_edge(g, 2, 4, 1);
+    rr_add_edge(g, 0, 5, 1);
+    rr_add_edge(g, 1, 2, 2);
+    rr_add_edge(g, 1, 6, 6);
+    rr_add_edge(g, 2, 3, 2);
+    rr_add_edge(g, 3, 6, 4);
     rr_add_edge(g, 3, 4, 1);
+    rr_add_edge(g, 4, 5, 2);
+    rr_add_edge(g, 6, 5, 3);
+
+    g_print_graph(g, SIZE_G);
+
+    rr_remove_edge(g, 0, 1);
+    g_print_graph(g, SIZE_G);
 
     // heap * q = heap_new();
     // heap_insert((node *) &g[0], q);
     //
     // rr_recalculate_shortest_path(g, q);
-    rr_add_edge(g, 0, 2, 1);
 
-    g_print_graph(g, SIZE_G);
-    rr_remove_edge(g, 0, 2);
+    rr_add_edge(g, 5, 1, 1);
     g_print_graph(g, SIZE_G);
 
 
